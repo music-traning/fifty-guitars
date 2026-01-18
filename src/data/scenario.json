@@ -1,0 +1,52 @@
+{
+  "game_concept": {
+    "protagonist_style": "孤高 (Solitary)",
+    "partner_device": "アイ・リアル (Virtual Session Droid)",
+    "philosophy": "ペンタ　いっぽん　で　せかい　を　きる",
+    "final_boss": "Giant Steps (BPM 300)"
+  },
+  "level_progression": [
+    {
+      "level_range": "01 - 10",
+      "stage_name": "ブルース　の　ドロヌマ",
+      "chord_progression": "3-Chord Blues",
+      "strategy": "マイナー・ペンタ　ごりおし",
+      "monologue": "キカイ　は　もんく　を　いわない。　おれ　の　ペンタ　を　ただ　うけいれる。"
+    },
+    {
+      "level_range": "11 - 20",
+      "stage_name": "ポップス　の　ユウワク",
+      "chord_progression": "Kayokyoku / J-Pop",
+      "strategy": "メジャー・ペンタ　への　キリカエ",
+      "monologue": "あまい　メロディ　だな。　だが、　おれ　の　ご　おん（５音）　は　ぶれない。"
+    },
+    {
+      "level_range": "21 - 30",
+      "stage_name": "スタンダード　の　メイロ",
+      "chord_progression": "II-V-I (Standard Jazz)",
+      "strategy": "コード・トーン　むし　の　ペンタ・シフト",
+      "monologue": "テンション？　しるか。　ペンタ　の　いち　を　ずらせば　あうんだよ。"
+    },
+    {
+      "level_range": "31 - 40",
+      "stage_name": "モード　の　ウミ",
+      "chord_progression": "Modal (So What / Maiden Voyage)",
+      "strategy": "アウト・サイド　アプローチ",
+      "monologue": "キカイ　が　おと　を　はずしている　んじゃ　ない。　おれ　が　せかい　を　ひろげたんだ。"
+    },
+    {
+      "level_range": "41 - 49",
+      "stage_name": "高速　の　シュウエン",
+      "chord_progression": "Cherokee / Rhythm Change (Fast)",
+      "strategy": "BPM250　の　マシンガン・ペンタ",
+      "monologue": "ゆび　から　ケムリ　が　でそうだ。　だが、　キカイ　は　つかれない。　……まけるか！"
+    },
+    {
+      "level": 50,
+      "stage_name": "巨人の足跡 (GIANT STEPS)",
+      "chord_progression": "Coltrane Matrix",
+      "strategy": "ペンタトニック・カオス・セオリー",
+      "monologue": "ごくさいしき　の　コード　しんこう。　め　が　まわる。　……だが　みえた！　すべての　コード　を　つらぬく　『たった　ひとつ　の　おと』　が！"
+    }
+  ]
+}

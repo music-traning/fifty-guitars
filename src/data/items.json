@@ -1,0 +1,74 @@
+{
+  "shop_items": [
+    {
+      "id": 1,
+      "name": "バラげん (1-Pack String)",
+      "price": 100,
+      "effect": "fragility -10 (One Time)",
+      "desc": "きれやすいが　やすい。　きんけつ　の　みかた。"
+    },
+    {
+      "id": 2,
+      "name": "コーティングげん (Coated Strings)",
+      "price": 1500,
+      "effect": "fragility -50 (Long Life)",
+      "desc": "ながもち　する。　あせっかき　な　おまえ　に。"
+    },
+    {
+      "id": 3,
+      "name": "おにぎりピック (Triangle Pick)",
+      "price": 100,
+      "effect": "appeal +2",
+      "desc": "コード　ストローク　が　あんてい　する。"
+    },
+    {
+      "id": 4,
+      "name": "ジャズ３ (Jazz III Pick)",
+      "price": 150,
+      "effect": "appeal +5 (Technical)",
+      "desc": "はやびき　が　しやすく　なる　きがする。"
+    },
+    {
+      "id": 5,
+      "name": "かわのストラップ (Leather Strap)",
+      "price": 3000,
+      "effect": "Stamina Cost Down (Small)",
+      "desc": "かた　への　ふたん　が　へる。　おもい　ギター　も　あんしん。"
+    },
+    {
+      "id": 6,
+      "name": "ロックピン (Strap Lock)",
+      "price": 2000,
+      "effect": "Accident Prevent 100%",
+      "desc": "ギター　らっか　じこ　を　ふせぐ　いのちづな。"
+    },
+    {
+      "id": 7,
+      "name": "じゅんかつスプレー (Fret Fast)",
+      "price": 800,
+      "effect": "Playability UP",
+      "desc": "ゆび　が　すべるように　うごく。　ヌルヌル　だ。"
+    },
+    {
+      "id": 8,
+      "name": "カポタスト (Capo)",
+      "price": 2500,
+      "effect": "Change Key (Strategy)",
+      "desc": "キー　を　かえて　あいて　の　ウラ　を　かく。"
+    },
+    {
+      "id": 9,
+      "name": "あついおちゃ (Hot Tea)",
+      "price": 120,
+      "effect": "Recover HP 30",
+      "desc": "ホッとする。　ずたぼろ　の　メンタル　が　かいふく。"
+    },
+    {
+      "id": 10,
+      "name": "えいようドリンク (Energy Drink)",
+      "price": 300,
+      "effect": "Boost Stamina (Temporary)",
+      "desc": "カフェイン　の　ちから　で　むりやり　うごく。"
+    }
+  ]
+}

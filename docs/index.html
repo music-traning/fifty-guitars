@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>50 Guitars Odyssey | 伝説のギター収集クリッカーRPG</title>
+    
+    <meta name="description" content="機材マニアと音ゲーマーに捧ぐ、異色の無料ブラウザゲーム。Photogenicから1959年製レスポールまで、50本の伝説的ギターを収集せよ。Web Audio APIによるリアルなコード演奏機能搭載。">
+    
+    <meta name="keywords" content="ギター,クリッカーゲーム,ブラウザゲーム,無料ゲーム,機材厨,ビザールギター,Web Audio API,レトロゲーム">
+    
+    <meta property="og:title" content="50 Guitars Odyssey" />
+    <meta property="og:description" content="「新しいギターが欲しいか？なら死ぬ気で稼いでみな。」伝説のギターを求めて旅するハードボイルド・クリッカーRPG。" />
+    <meta property="og:type" content="website" />
+    
+    <meta property="og:url" content="https://music-traning.github.io/fifty-gutars/" />
+    <meta property="og:image" content="https://music-traning.github.io/fifty-gutars/ogp.png" />
+    <meta property="og:site_name" content="50 Guitars Odyssey" />
+    
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="50 Guitars Odyssey" />
+    <meta name="twitter:description" content="機材マニア歓喜。50本のギターを集めて弾きまくれ。毒舌オヤジと共に歩む、終わりのない音楽の旅。" />
+    <meta name="twitter:image" content="https://music-traning.github.io/fifty-gutars/ogp.png" />
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎸</text></svg>">
+
+    <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "VideoGame",
+      "name": "50 Guitars Odyssey",
+      "description": "50種類のギターを収集し、演奏して資金を稼ぐブラウザクリッカーRPG。",
+      "genre": ["Clicker", "Music", "Simulation"],
+      "playMode": "SinglePlayer",
+      "applicationCategory": "Game",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "JPY"
+      }
+    }
+    </script>
+  <script type="module" crossorigin src="/fifty-gutars/assets/index-C3sKI7KX.js"></script>
+  <link rel="stylesheet" crossorigin href="/fifty-gutars/assets/index-CylnShrs.css">
+</head>
+<body>
+    <div id="app">
+        <div id="intro-overlay">
+            <div class="intro-content">
+                <h1 class="intro-title">50 Guitars Odyssey</h1>
+                <p class="intro-subtitle">〜 伝説のギターを求めて 〜</p>
+                <p class="intro-msg">CLICK TO START</p>
+            </div>
+        </div>
+        
+        <div class="game-container">
+            <div class="top-buttons">
+                <button id="btn-help">ヘルプ</button>
+                <button id="btn-save">記録する</button>
+            </div>
+            
+            <h1>50 Guitars Odyssey</h1>
+
+            <div class="window">
+                <div class="status-bar">
+                    <div style="display:flex; align-items:baseline; gap:10px;">
+                        <span>LEVEL: <span id="player-lv">1</span></span>
+                        <span id="stage-location" style="font-size: 0.8em; color: #aaa;"></span>
+                    </div>
+                    <span>MONEY: <span id="player-money">0</span> G</span>
+                </div>
+                <div class="guitar-info">
+                    <div id="guitar-name" style="font-size: 22px; color: #00ffff;"></div>
+                    <div style="margin-top:5px;">
+                        弦耐久: <span id="life-val"></span> / <span id="max-life-val"></span>
+                        <div class="bar-container"><div id="life-bar" class="bar-fill"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="window">
+                <span id="speaker-name" class="name-tag"></span>
+                <div id="message-text" class="message-box"></div>
+            </div>
+
+            <div class="controls">
+                <button id="btn-play-mode">ひく (演奏)</button>
+                <button id="btn-shop">おやじ (会話)</button>
+                <button id="btn-guitar-list">ギター (装備)</button>
+                <button id="btn-repair">修理 (リペア)</button>
+                <button id="btn-prev">まえへ (戻る)</button>
+                <button id="btn-next">つぎへ (挑戦)</button>
+            </div>
+        </div>
+
+        <div id="fretboard-overlay" class="hidden">
+            <div class="overlay-content">
+                <div id="groove-lamp" class="groove-indicator">● BEAT</div>
+                <div class="backing-info">
+                    <div id="style-title" style="color:#aaa; font-size:14px;">Blues</div>
+                    <div id="current-chord" style="color:#ffff55; font-size:32px; font-weight:bold;">C7</div>
+                </div>
+                <button id="btn-stop-play" style="margin-bottom:10px; background:#d32f2f;">演奏終了</button>
+                <div id="bonus-display" class="bonus-text"></div>
+                
+                <div class="fretboard">
+                    <div class="frets-grid">
+                        <div class="fret-0" id="nut-area">0</div>
+                        <div class="fret-rest" id="frets-area"></div>
+                    </div>
+                    <div class="strings-layer">
+                        <div class="string-zone" data-freq="329.63" data-idx="0"><div class="string-line"></div><div class="touch-marker"></div></div>
+                        <div class="string-zone" data-freq="246.94" data-idx="1"><div class="string-line"></div><div class="touch-marker"></div></div>
+                        <div class="string-zone" data-freq="196.00" data-idx="2"><div class="string-line"></div><div class="touch-marker"></div></div>
+                        <div class="string-zone" data-freq="146.83" data-idx="3"><div class="string-line"></div><div class="touch-marker"></div></div>
+                        <div class="string-zone" data-freq="110.00" data-idx="4"><div class="string-line"></div><div class="touch-marker"></div></div>
+                        <div class="string-zone" data-freq="82.41"  data-idx="5"><div class="string-line"></div><div class="touch-marker"></div></div>
+                    </div>
+                </div>
+                <div style="color:#ccc; margin-top:10px;">マウスドラッグでチョーキング！</div>
+            </div>
+        </div>
+
+        <div id="help-overlay" class="hidden">
+            <div class="window help-window">
+                <h2>プレイマニュアル</h2>
+                <div class="help-content">
+                    <h3>■ 基本ルール</h3>
+                    <p>ギターを弾いて金を稼ぎ、名機を集めてステージを進むゲームだ。</p>
+                    <h3>■ 演奏とボーナス</h3>
+                    <p>「ひく」ボタンで演奏モードへ。<br>スネアドラム（2拍・4拍）のタイミングに合わせて弾け。</p>
+                    <ul>
+                        <li><span style="color:#00ffff;">GROOVE!!</span> : タイミングよくクリック (小ボーナス)</li>
+                        <li><span style="color:#ffff00;">TASTY!!</span> : タイミングよくドラッグ/チョーキング (大ボーナス)</li>
+                    </ul>
+                    <h3>■ 弦の耐久度</h3>
+                    <p>弾くたびに耐久度が減る。0になると演奏できない。「修理」で直せ。<br>※装備を変えても耐久度は引き継がれるぞ。</p>
+                    <h3>■ ギターとスキル</h3>
+                    <p>ギターにはそれぞれ「パッシブスキル」がある。<br>説明文をよく読んで使い分けろ。</p>
+                    <div style="margin-top:20px; border-top:1px dashed #555; padding-top:10px;">
+                        <p style="color:#ff4444; font-size:0.9em;">※セーブデータを消したい場合は下のボタンを押せ。</p>
+                        <button id="btn-delete-data" style="background:#300; border-color:#f00;">データを完全に消去してリセット</button>
+                    </div>
+                </div>
+                <button id="btn-close-help" style="margin-top:10px;">閉じる</button>
+            </div>
+        </div>
+
+        <div id="reward-overlay" class="hidden">
+            <div class="window reward-window">
+                <h2 style="color:#ffff55; text-align:center;">NEW GEAR!</h2>
+                <div id="reward-guitar-name" class="reward-title"></div>
+                <div class="reward-message-box">
+                    <span class="name-tag">おやじ</span>
+                    <div id="reward-oyaji-msg"></div>
+                </div>
+                <div style="text-align:center; margin-top:20px;">
+                    <button id="btn-close-reward">受け取る</button> </div>
+            </div>
+        </div>
+
+        <div id="guitar-list-overlay" class="hidden">
+            <div class="window list-window">
+                <div class="list-header-row">
+                    <h2>所持ギター一覧</h2>
+                    <button id="btn-equip" disabled>装備する</button>
+                </div>
+                <div class="list-container">
+                    <ul id="owned-list" class="selectable-list"></ul>
+                    <div id="guitar-specs" class="specs-panel">
+                        <div class="specs-scroll-content">
+                            <h3 id="spec-name">Select Guitar</h3>
+                            <div class="spec-grid">
+                                <div>Appeal: <span id="spec-appeal">-</span></div>
+                                <div>Weight: <span id="spec-weight">-</span></div>
+                                <div>Life: <span id="spec-life">-</span></div>
+                            </div>
+                            <p id="spec-desc" class="spec-desc">説明文</p>
+                        </div>
+                    </div>
+                </div>
+                <button id="btn-close-list" style="margin-top:10px;">閉じる</button>
+            </div>
+        </div>
+
+        <div id="repair-overlay" class="hidden">
+            <div class="window shop-window">
+                <h2 style="color:#ffcc00; text-align:center;">REPAIR SHOP</h2>
+                <p style="text-align:center;">「弦の張り替えだな？ 任せときな。」</p>
+                <div class="shop-price">修理費: <span id="repair-cost">0</span> G</div>
+                <div style="display:flex; gap:10px; justify-content:center;">
+                    <button id="btn-do-repair">頼む</button>
+                    <button id="btn-cancel-repair">やめる</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    <div style="display:none;">
+        <h2>収録ギターモデル一覧</h2>
+        <p>
+            このゲームには以下のギターが登場します：
+            PLAYTECH ST250, Photogenic, Legend, Mavis, Squier Bullet, 
+            Teisco Spectrum 5, Mosrite Ventures, Rickenbacker 330, 
+            Gibson Les Paul '59 Burst (Greeny), Fender Stratocaster 1954, 
+            Zemaitis Metal Front, Veleno Aluminum, Steinberger, Parker Fly, 
+            Travis Bean, D'Angelico New Yorker... and more.
+            ビザールギターからハイエンド、ジャパンビンテージまで完全網羅。
+        </p>
+    </div>
+
+</body>
+</html>
