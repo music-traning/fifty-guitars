@@ -1,9 +1,9 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  // リポジトリ名を設定（これが重要！）
-  base: '/fifty-gutars/',
+  // ↓ここを直す
+  base: '/fifty-guitars/', 
   build: {
-    outDir: 'docs', // 出力先を 'dist' ではなく 'docs' に変更
+    outDir: 'docs',
   }
 })
