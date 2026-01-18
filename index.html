@@ -1,30 +1,33 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <title>50 Guitars Odyssey | 伝説のギター収集クリッカーRPG</title>
-    
-    <meta name="description" content="機材マニアと音ゲーマーに捧ぐ、異色の無料ブラウザゲーム。Photogenicから1959年製レスポールまで、50本の伝説的ギターを収集せよ。Web Audio APIによるリアルなコード演奏機能搭載。">
-    
+
+    <meta name="description"
+        content="機材マニアと音ゲーマーに捧ぐ、異色の無料ブラウザゲーム。Photogenicから1959年製レスポールまで、50本の伝説的ギターを収集せよ。Web Audio APIによるリアルなコード演奏機能搭載。">
+
     <meta name="keywords" content="ギター,クリッカーゲーム,ブラウザゲーム,無料ゲーム,機材厨,ビザールギター,Web Audio API,レトロゲーム">
-    
+
     <meta property="og:title" content="50 Guitars Odyssey" />
     <meta property="og:description" content="「新しいギターが欲しいか？なら死ぬ気で稼いでみな。」伝説のギターを求めて旅するハードボイルド・クリッカーRPG。" />
     <meta property="og:type" content="website" />
-    
+
     <meta property="og:url" content="https://fifty-guitars.vercel.app/" />
-    <meta property="og:image" content="https://fifty-guitars.vercel.app/ogp.png" />  
+    <meta property="og:image" content="https://fifty-guitars.vercel.app/ogp.png" />
     <meta name="twitter:image" content="https://fifty-guitars.vercel.app/ogp.png" />
     <meta property="og:site_name" content="50 Guitars Odyssey" />
-    
+
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="50 Guitars Odyssey" />
     <meta name="twitter:description" content="機材マニア歓喜。50本のギターを集めて弾きまくれ。毒舌オヤジと共に歩む、終わりのない音楽の旅。" />
     <meta name="twitter:image" content="https://music-traning.github.io/fifty-gutars/ogp.png" />
 
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎸</text></svg>">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎸</text></svg>">
 
     <script type="application/ld+json">
     {
@@ -44,6 +47,7 @@
     }
     </script>
 </head>
+
 <body>
     <div id="app">
         <div id="intro-overlay">
@@ -59,13 +63,13 @@
                 </a>
             </div>
         </div>
-        
+
         <div class="game-container">
             <div class="top-buttons">
                 <button id="btn-help">ヘルプ</button>
                 <button id="btn-save">記録する</button>
             </div>
-            
+
             <h1>50 Guitars Odyssey</h1>
 
             <div class="window">
@@ -80,7 +84,9 @@
                     <div id="guitar-name" style="font-size: 22px; color: #00ffff;"></div>
                     <div style="margin-top:5px;">
                         弦耐久: <span id="life-val"></span> / <span id="max-life-val"></span>
-                        <div class="bar-container"><div id="life-bar" class="bar-fill"></div></div>
+                        <div class="bar-container">
+                            <div id="life-bar" class="bar-fill"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -109,23 +115,41 @@
                 </div>
                 <button id="btn-stop-play" style="margin-bottom:10px; background:#d32f2f;">演奏終了</button>
                 <div id="bonus-display" class="bonus-text"></div>
-                
+
                 <!-- ★タイミング判定表示 -->
                 <div id="timing-judgment" class="timing-judgment"></div>
                 <div id="multiplier-display" class="multiplier-display"></div>
-                
+
                 <div class="fretboard">
                     <div class="frets-grid">
                         <div class="fret-0" id="nut-area">0</div>
                         <div class="fret-rest" id="frets-area"></div>
                     </div>
                     <div class="strings-layer">
-                        <div class="string-zone" data-freq="329.63" data-idx="0"><div class="string-line"></div><div class="touch-marker"></div></div>
-                        <div class="string-zone" data-freq="246.94" data-idx="1"><div class="string-line"></div><div class="touch-marker"></div></div>
-                        <div class="string-zone" data-freq="196.00" data-idx="2"><div class="string-line"></div><div class="touch-marker"></div></div>
-                        <div class="string-zone" data-freq="146.83" data-idx="3"><div class="string-line"></div><div class="touch-marker"></div></div>
-                        <div class="string-zone" data-freq="110.00" data-idx="4"><div class="string-line"></div><div class="touch-marker"></div></div>
-                        <div class="string-zone" data-freq="82.41"  data-idx="5"><div class="string-line"></div><div class="touch-marker"></div></div>
+                        <div class="string-zone" data-freq="329.63" data-idx="0">
+                            <div class="string-line"></div>
+                            <div class="touch-marker"></div>
+                        </div>
+                        <div class="string-zone" data-freq="246.94" data-idx="1">
+                            <div class="string-line"></div>
+                            <div class="touch-marker"></div>
+                        </div>
+                        <div class="string-zone" data-freq="196.00" data-idx="2">
+                            <div class="string-line"></div>
+                            <div class="touch-marker"></div>
+                        </div>
+                        <div class="string-zone" data-freq="146.83" data-idx="3">
+                            <div class="string-line"></div>
+                            <div class="touch-marker"></div>
+                        </div>
+                        <div class="string-zone" data-freq="110.00" data-idx="4">
+                            <div class="string-line"></div>
+                            <div class="touch-marker"></div>
+                        </div>
+                        <div class="string-zone" data-freq="82.41" data-idx="5">
+                            <div class="string-line"></div>
+                            <div class="touch-marker"></div>
+                        </div>
                     </div>
                 </div>
                 <div style="color:#ccc; margin-top:10px;">マウスドラッグでチョーキング！</div>
@@ -150,7 +174,8 @@
                     <p>ギターにはそれぞれ「パッシブスキル」がある。<br>説明文をよく読んで使い分けろ。</p>
                     <div style="margin-top:20px; border-top:1px dashed #555; padding-top:10px;">
                         <p style="color:#ff4444; font-size:0.9em;">※セーブデータを消したい場合は下のボタンを押せ。</p>
-                        <button id="btn-delete-data" style="background:#300; border-color:#f00;">データを完全に消去してリセット</button>
+                        <button id="btn-delete-data"
+                            style="background:#300; border-color:#f00;">データを完全に消去してリセット</button>
                     </div>
                 </div>
                 <button id="btn-close-help" style="margin-top:10px;">閉じる</button>
@@ -166,7 +191,8 @@
                     <div id="reward-oyaji-msg"></div>
                 </div>
                 <div style="text-align:center; margin-top:20px;">
-                    <button id="btn-close-reward">受け取る</button> </div>
+                    <button id="btn-close-reward">受け取る</button>
+                </div>
             </div>
         </div>
 
@@ -206,16 +232,46 @@
             </div>
         </div>
 
+        <!-- ★Lv50 エンディングオーバーレイ -->
+        <div id="ending-overlay" class="hidden">
+            <div class="window ending-window">
+                <h2 style="color:#ffff55; text-align:center; font-size:28px;">ENDING</h2>
+                <div id="ending-route-title" style="text-align:center; color:#00ffff; font-size:20px; margin:20px 0;">
+                </div>
+                <div class="ending-message-box">
+                    <span class="name-tag">おやじ</span>
+                    <div id="ending-oyaji-msg" style="min-height:150px; line-height:1.8;"></div>
+                </div>
+                <div id="ending-stats"
+                    style="margin-top:20px; padding:15px; background:rgba(0,0,0,0.5); border:1px solid #444;">
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:14px;">
+                        <div>技術力 (Respect): <span id="stat-respect" style="color:#00ff00;">0</span></div>
+                        <div>個性 (Passion): <span id="stat-passion" style="color:#ff00ff;">0</span></div>
+                        <div>正確性 (Precision): <span id="stat-precision" style="color:#ffff00;">0</span></div>
+                        <div>総資産: <span id="stat-money" style="color:#00ffff;">0</span> G</div>
+                    </div>
+                </div>
+                <div style="text-align:center; margin-top:30px; font-size:12px; color:#888;">
+                    <p>Thank you for playing</p>
+                    <p style="color:#00ffff;">50 Guitars Odyssey</p>
+                    <p style="margin-top:20px;">©2026 buro</p>
+                </div>
+                <div style="text-align:center; margin-top:20px;">
+                    <button id="btn-restart-game" style="background:#d32f2f;">最初から遊ぶ</button>
+                </div>
+            </div>
+        </div>
+
     </div>
-    
+
     <div style="display:none;">
         <h2>収録ギターモデル一覧</h2>
         <p>
             このゲームには以下のギターが登場します：
-            PLAYTECH ST250, Photogenic, Legend, Mavis, Squier Bullet, 
-            Teisco Spectrum 5, Mosrite Ventures, Rickenbacker 330, 
-            Gibson Les Paul '59 Burst (Greeny), Fender Stratocaster 1954, 
-            Zemaitis Metal Front, Veleno Aluminum, Steinberger, Parker Fly, 
+            PLAYTECH ST250, Photogenic, Legend, Mavis, Squier Bullet,
+            Teisco Spectrum 5, Mosrite Ventures, Rickenbacker 330,
+            Gibson Les Paul '59 Burst (Greeny), Fender Stratocaster 1954,
+            Zemaitis Metal Front, Veleno Aluminum, Steinberger, Parker Fly,
             Travis Bean, D'Angelico New Yorker... and more.
             ビザールギターからハイエンド、ジャパンビンテージまで完全網羅。
         </p>
@@ -223,4 +279,5 @@
 
     <script type="module" src="/src/main.js"></script>
 </body>
+
 </html>

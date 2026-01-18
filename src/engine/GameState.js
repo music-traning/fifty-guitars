@@ -221,6 +221,16 @@ export class GameState {
     }
     // ----------------
 
+    // ★新規: ステージ親和性ボーナス
+    if (guitar.stage_affinity && guitar.stage_affinity.includes(this.currentStageId)) {
+      moneyMult *= 1.3; // 推奨ギター使用で +30%
+
+      // オヤジ関係値にボーナス（推奨ギター使用で respect 上昇）
+      if (guitar.oyaji_approval) {
+        this.oyajiRelationship.respect += Math.floor(guitar.oyaji_approval / 10);
+      }
+    }
+
     const decay = guitar.durability.decay_rate * intensity * decayMult * (1 + Math.random() * 0.5);
     this.durability -= decay;
 

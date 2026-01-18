@@ -6,7 +6,9 @@
   --danger-color: #ff4444;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -88,8 +90,18 @@ h1 {
 }
 
 /* 耐久度バー */
-.bar-container { background: #333; height: 10px; width: 100%; margin-top: 5px; }
-.bar-fill { height: 100%; background: #00ff00; transition: width 0.3s; }
+.bar-container {
+  background: #333;
+  height: 10px;
+  width: 100%;
+  margin-top: 5px;
+}
+
+.bar-fill {
+  height: 100%;
+  background: #00ff00;
+  transition: width 0.3s;
+}
 
 /* --- 3. ボタンエリア --- */
 .controls {
@@ -108,25 +120,44 @@ button {
   font-size: 16px;
   transition: background 0.1s;
 }
-button:hover { background: #333; }
-button:active { transform: translateY(2px); }
-button:disabled { color: #555; border-color: #555; cursor: not-allowed; }
+
+button:hover {
+  background: #333;
+}
+
+button:active {
+  transform: translateY(2px);
+}
+
+button:disabled {
+  color: #555;
+  border-color: #555;
+  cursor: not-allowed;
+}
 
 /* ヘルプ・記録ボタン（右上配置用） */
 .top-buttons {
-    position: absolute;
-    top: -40px; right: 0;
-    display: flex; gap: 10px;
+  position: absolute;
+  top: -40px;
+  right: 0;
+  display: flex;
+  gap: 10px;
 }
-#btn-help, #btn-save {
-    background: #000;
-    color: #ffff55;
-    border: 1px solid #ffff55;
-    padding: 5px 15px;
-    font-size: 14px;
-    width: auto;
+
+#btn-help,
+#btn-save {
+  background: #000;
+  color: #ffff55;
+  border: 1px solid #ffff55;
+  padding: 5px 15px;
+  font-size: 14px;
+  width: auto;
 }
-#btn-help:hover, #btn-save:hover { background: #333; }
+
+#btn-help:hover,
+#btn-save:hover {
+  background: #333;
+}
 
 /* --- 4. オーバーレイ共通 --- */
 #fretboard-overlay,
@@ -135,126 +166,329 @@ button:disabled { color: #555; border-color: #555; cursor: not-allowed; }
 #repair-overlay,
 #help-overlay,
 #intro-overlay {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.9);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
   z-index: 100;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
-.hidden { display: none !important; }
+
+.hidden {
+  display: none !important;
+}
 
 /* --- 5. イントロ画面 --- */
 #intro-overlay {
-    z-index: 9999;
-    background: #000;
-    cursor: pointer;
-    transition: opacity 0.5s;
+  z-index: 9999;
+  background: #000;
+  cursor: pointer;
+  transition: opacity 0.5s;
 }
-.intro-content { text-align: center; animation: fadeIn 2s; }
+
+.intro-content {
+  text-align: center;
+  animation: fadeIn 2s;
+}
+
 .intro-title {
-    font-size: 40px; color: #00ffff; margin-bottom: 10px;
-    text-shadow: 0 0 20px #00ffff;
+  font-size: 40px;
+  color: #00ffff;
+  margin-bottom: 10px;
+  text-shadow: 0 0 20px #00ffff;
 }
-.intro-subtitle { font-size: 18px; color: #aaa; margin-bottom: 40px; }
-.intro-msg { 
-    font-size: 24px; color: #ffff55; 
-    animation: blink 1s infinite; 
+
+.intro-subtitle {
+  font-size: 18px;
+  color: #aaa;
+  margin-bottom: 40px;
+}
+
+.intro-msg {
+  font-size: 24px;
+  color: #ffff55;
+  animation: blink 1s infinite;
 }
 
 /* --- 6. ヘルプ画面 --- */
 .help-window {
-    width: 90%; max-width: 600px;
-    max-height: 80vh;
-    display: flex; flex-direction: column;
-    background: #001133;
-    border: 2px solid #00ffff;
-    animation: popIn 0.3s ease-out;
-    box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  background: #001133;
+  border: 2px solid #00ffff;
+  animation: popIn 0.3s ease-out;
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
 }
+
 .help-content {
-    flex: 1; overflow-y: auto;
-    text-align: left;
-    padding: 10px;
-    line-height: 1.8;
+  flex: 1;
+  overflow-y: auto;
+  text-align: left;
+  padding: 10px;
+  line-height: 1.8;
 }
-.help-content h3 { border-bottom: 1px solid #555; color: #00ffff; margin-top: 20px; }
-.help-content ul { padding-left: 20px; }
-.help-content li { margin-bottom: 5px; }
+
+.help-content h3 {
+  border-bottom: 1px solid #555;
+  color: #00ffff;
+  margin-top: 20px;
+}
+
+.help-content ul {
+  padding-left: 20px;
+}
+
+.help-content li {
+  margin-bottom: 5px;
+}
 
 /* --- 7. 演奏画面 --- */
-.overlay-content { text-align: center; width: 100%; }
+.overlay-content {
+  text-align: center;
+  width: 100%;
+}
+
 .fretboard {
-  width: 90vw; max-width: 800px; height: 300px;
+  width: 90vw;
+  max-width: 800px;
+  height: 300px;
   background: #3e2723;
   position: relative;
-  display: flex; flex-direction: column;
+  display: flex;
+  flex-direction: column;
   border: 5px solid #222;
   margin: 0 auto;
 }
-.frets-grid { position: absolute; width: 100%; height: 100%; display: flex; pointer-events: none; }
-.fret-0 { width: 50px; background: #888; border-right: 4px solid #444; display: flex; align-items: center; justify-content: center; color:#000;}
-.fret-rest { flex-grow: 1; display: flex; }
-.fret-cell { flex: 1; border-right: 2px solid #aaa; position: relative; display: flex; align-items: center; justify-content: center; }
-.dot { width: 14px; height: 14px; background: #d7ccc8; border-radius: 50%; opacity: 0.6; }
 
-.strings-layer { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; z-index: 10; }
-.string-zone { flex: 1; position: relative; cursor: pointer; display: flex; align-items: center; }
-.string-line { width: 100%; background: #ddd; position: relative; pointer-events: none; }
-.touch-marker { position: absolute; width: 20px; height: 20px; background: orange; border-radius: 50%; display: none; transform: translate(-50%, -50%); }
+.frets-grid {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  pointer-events: none;
+}
 
-.string-zone:nth-child(1) .string-line { height: 1px; }
-.string-zone:nth-child(2) .string-line { height: 1px; }
-.string-zone:nth-child(3) .string-line { height: 2px; }
-.string-zone:nth-child(4) .string-line { height: 3px; background: #bbb; }
-.string-zone:nth-child(5) .string-line { height: 4px; background: #bbb; }
-.string-zone:nth-child(6) .string-line { height: 5px; background: #bbb; }
+.fret-0 {
+  width: 50px;
+  background: #888;
+  border-right: 4px solid #444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+}
+
+.fret-rest {
+  flex-grow: 1;
+  display: flex;
+}
+
+.fret-cell {
+  flex: 1;
+  border-right: 2px solid #aaa;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dot {
+  width: 14px;
+  height: 14px;
+  background: #d7ccc8;
+  border-radius: 50%;
+  opacity: 0.6;
+}
+
+.strings-layer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+}
+
+.string-zone {
+  flex: 1;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.string-line {
+  width: 100%;
+  background: #ddd;
+  position: relative;
+  pointer-events: none;
+}
+
+.touch-marker {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: orange;
+  border-radius: 50%;
+  display: none;
+  transform: translate(-50%, -50%);
+}
+
+.string-zone:nth-child(1) .string-line {
+  height: 1px;
+}
+
+.string-zone:nth-child(2) .string-line {
+  height: 1px;
+}
+
+.string-zone:nth-child(3) .string-line {
+  height: 2px;
+}
+
+.string-zone:nth-child(4) .string-line {
+  height: 3px;
+  background: #bbb;
+}
+
+.string-zone:nth-child(5) .string-line {
+  height: 4px;
+  background: #bbb;
+}
+
+.string-zone:nth-child(6) .string-line {
+  height: 5px;
+  background: #bbb;
+}
 
 /* グルーヴランプ */
 .groove-indicator {
-    font-size: 20px; color: #333; background: #000;
-    border: 2px solid #555; padding: 5px 20px; border-radius: 20px;
-    margin-bottom: 10px; transition: all 0.05s; display: inline-block;
+  font-size: 20px;
+  color: #333;
+  background: #000;
+  border: 2px solid #555;
+  padding: 5px 20px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+  transition: all 0.05s;
+  display: inline-block;
 }
+
 .groove-indicator.active {
-    color: #fff; background: #00cc00; border-color: #fff;
-    box-shadow: 0 0 15px #00ff00; transform: scale(1.1);
+  color: #fff;
+  background: #00cc00;
+  border-color: #fff;
+  box-shadow: 0 0 15px #00ff00;
+  transform: scale(1.1);
 }
 
 /* ボーナステキスト */
 .bonus-text {
-    position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%);
-    font-size: 40px; font-weight: bold; opacity: 0; pointer-events: none;
-    transition: opacity 0.5s; z-index: 200; text-shadow: 2px 2px 0 #000;
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 40px;
+  font-weight: bold;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s;
+  z-index: 200;
+  text-shadow: 2px 2px 0 #000;
 }
-.bonus-text.show { opacity: 1; animation: bounce 0.3s; }
-.bonus-text.groove { color: #00ffff; }
-.bonus-text.tasty { color: #ffff00; font-size: 60px; text-shadow: 0 0 20px orange; }
+
+.bonus-text.show {
+  opacity: 1;
+  animation: bounce 0.3s;
+}
+
+.bonus-text.groove {
+  color: #00ffff;
+}
+
+.bonus-text.tasty {
+  color: #ffff00;
+  font-size: 60px;
+  text-shadow: 0 0 20px orange;
+}
 
 /* ★タイミング判定表示 */
 .timing-judgment {
-    position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%);
-    font-size: 50px; font-weight: bold; opacity: 0; pointer-events: none;
-    transition: opacity 0.3s; z-index: 201; text-shadow: 2px 2px 4px #000;
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 50px;
+  font-weight: bold;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  z-index: 201;
+  text-shadow: 2px 2px 4px #000;
 }
-.timing-judgment.show { opacity: 1; animation: bounce 0.3s; }
-.timing-judgment.perfect { color: #ff00ff; text-shadow: 0 0 20px #ff00ff; }
-.timing-judgment.great { color: #00ff00; text-shadow: 0 0 15px #00ff00; }
-.timing-judgment.good { color: #ffff00; text-shadow: 0 0 10px #ffff00; }
-.timing-judgment.miss { color: #888; text-shadow: none; }
+
+.timing-judgment.show {
+  opacity: 1;
+  animation: bounce 0.3s;
+}
+
+.timing-judgment.perfect {
+  color: #ff00ff;
+  text-shadow: 0 0 20px #ff00ff;
+}
+
+.timing-judgment.great {
+  color: #00ff00;
+  text-shadow: 0 0 15px #00ff00;
+}
+
+.timing-judgment.good {
+  color: #ffff00;
+  text-shadow: 0 0 10px #ffff00;
+}
+
+.timing-judgment.miss {
+  color: #888;
+  text-shadow: none;
+}
 
 /* ★倍率表示 */
 .multiplier-display {
-    position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%);
-    font-size: 30px; font-weight: bold; opacity: 0; pointer-events: none;
-    transition: opacity 0.3s; z-index: 201; color: #ffaa00;
-    text-shadow: 1px 1px 2px #000;
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 30px;
+  font-weight: bold;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  z-index: 201;
+  color: #ffaa00;
+  text-shadow: 1px 1px 2px #000;
 }
-.multiplier-display.show { opacity: 1; animation: fadeIn 0.3s; }
+
+.multiplier-display.show {
+  opacity: 1;
+  animation: fadeIn 0.3s;
+}
 
 
 /* --- 8. ギターリスト画面 --- */
 .list-window {
-  width: 95%; max-width: 700px; height: 80vh;
-  display: flex; flex-direction: column;
+  width: 95%;
+  max-width: 700px;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
   background: #001133;
   z-index: 200;
 }
@@ -268,91 +502,231 @@ button:disabled { color: #555; border-color: #555; cursor: not-allowed; }
   padding-bottom: 10px;
   border-bottom: 2px solid var(--accent-color);
 }
-.list-header-row h2 { margin: 0; font-size: 18px; }
+
+.list-header-row h2 {
+  margin: 0;
+  font-size: 18px;
+}
 
 /* 装備ボタン (ヘッダー内) */
 #btn-equip {
-  width: auto; min-width: 120px;
-  padding: 8px 15px; font-size: 16px;
-  background-color: #00cc00; color: #fff;
-  font-weight: bold; border: 2px solid #00ff00;
-  border-radius: 4px; cursor: pointer; margin: 0; 
+  width: auto;
+  min-width: 120px;
+  padding: 8px 15px;
+  font-size: 16px;
+  background-color: #00cc00;
+  color: #fff;
+  font-weight: bold;
+  border: 2px solid #00ff00;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0;
 }
+
 #btn-equip:disabled {
-  background-color: #333; border-color: #555; color: #888; cursor: not-allowed;
+  background-color: #333;
+  border-color: #555;
+  color: #888;
+  cursor: not-allowed;
 }
+
 #btn-equip:hover:not(:disabled) {
-  background-color: #00ee00; box-shadow: 0 0 10px #00ff00;
+  background-color: #00ee00;
+  box-shadow: 0 0 10px #00ff00;
 }
 
 .list-container {
-  display: flex; flex: 1; gap: 20px; overflow: hidden;
+  display: flex;
+  flex: 1;
+  gap: 20px;
+  overflow: hidden;
 }
 
 .selectable-list {
-  flex: 1; list-style: none; padding: 0; margin: 0;
-  border: 1px solid #444; overflow-y: auto;
+  flex: 1;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #444;
+  overflow-y: auto;
 }
-.selectable-list li { padding: 10px; border-bottom: 1px solid #333; cursor: pointer; }
-.selectable-list li:hover { background: #333; }
-.selectable-list li.selected { background: #3e9bc0; color: #000; font-weight: bold; }
-.selectable-list li.current-equip::after { content: " [E]"; color: #00ff00; margin-left:5px; }
+
+.selectable-list li {
+  padding: 10px;
+  border-bottom: 1px solid #333;
+  cursor: pointer;
+}
+
+.selectable-list li:hover {
+  background: #333;
+}
+
+.selectable-list li.selected {
+  background: #3e9bc0;
+  color: #000;
+  font-weight: bold;
+}
+
+.selectable-list li.current-equip::after {
+  content: " [E]";
+  color: #00ff00;
+  margin-left: 5px;
+}
+
+/* ★推奨ギター表示 */
+.selectable-list li.recommended-guitar {
+  background: linear-gradient(90deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 165, 0, 0.1) 100%);
+  border-left: 3px solid #ffd700;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.selectable-list li.recommended-guitar:hover {
+  background: linear-gradient(90deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 165, 0, 0.2) 100%);
+}
 
 .specs-panel {
-  flex: 1; border: 1px solid #444; 
+  flex: 1;
+  border: 1px solid #444;
   background: rgba(0, 0, 0, 0.3);
-  overflow: hidden; display: flex; flex-direction: column;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .specs-scroll-content {
-  flex: 1; overflow-y: auto; padding: 15px;
+  flex: 1;
+  overflow-y: auto;
+  padding: 15px;
 }
 
 .spec-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-  margin: 10px 0; border-bottom: 1px dashed #555; padding-bottom: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 10px 0;
+  border-bottom: 1px dashed #555;
+  padding-bottom: 10px;
 }
-.spec-desc { font-size: 0.9em; color: #ccc; }
+
+.spec-desc {
+  font-size: 0.9em;
+  color: #ccc;
+}
 
 /* --- 9. 報酬・リペア画面 --- */
 .reward-window {
-    width: 90%; max-width: 500px;
-    background: #001133; border: 4px double #ffff55; padding: 20px;
-    box-shadow: 0 0 30px rgba(255, 255, 85, 0.3); animation: popIn 0.3s ease-out;
+  width: 90%;
+  max-width: 500px;
+  background: #001133;
+  border: 4px double #ffff55;
+  padding: 20px;
+  box-shadow: 0 0 30px rgba(255, 255, 85, 0.3);
+  animation: popIn 0.3s ease-out;
 }
+
 .reward-title {
-    font-size: 24px; text-align: center; color: #00ffff; margin: 20px 0;
-    font-weight: bold; text-shadow: 0 0 10px rgba(0,255,255,0.5);
+  font-size: 24px;
+  text-align: center;
+  color: #00ffff;
+  margin: 20px 0;
+  font-weight: bold;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
 }
+
 .reward-message-box {
-    background: rgba(0,0,0,0.5); border: 1px solid #444;
-    padding: 15px; min-height: 80px; line-height: 1.6;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid #444;
+  padding: 15px;
+  min-height: 80px;
+  line-height: 1.6;
 }
 
 .shop-window {
-    width: 90%; max-width: 400px;
-    background: #2b1d0e; border: 4px solid #cc6600;
-    padding: 20px; text-align: center; color: #ffd700;
+  width: 90%;
+  max-width: 400px;
+  background: #2b1d0e;
+  border: 4px solid #cc6600;
+  padding: 20px;
+  text-align: center;
+  color: #ffd700;
 }
-.shop-price { font-size: 24px; color: #ffff55; margin: 20px 0; font-weight: bold; }
+
+.shop-price {
+  font-size: 24px;
+  color: #ffff55;
+  margin: 20px 0;
+  font-weight: bold;
+}
+
+/* ★エンディング画面 */
+.ending-window {
+  width: 90%;
+  max-width: 600px;
+  background: linear-gradient(135deg, #001133 0%, #1a0033 100%);
+  border: 4px double #ffff55;
+  padding: 30px;
+  box-shadow: 0 0 50px rgba(255, 255, 85, 0.5);
+  animation: popIn 0.5s ease-out;
+}
+
+.ending-message-box {
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid #00ffff;
+  padding: 20px;
+  min-height: 150px;
+  line-height: 1.8;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+}
 
 /* --- 10. アニメーション --- */
 @keyframes popIn {
-    0% { transform: scale(0.8); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
+
 @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
 }
+
 @keyframes fadeIn {
-    0% { opacity: 0; transform: translateY(20px); }
-    100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
+
 @keyframes bounce {
-    0% { transform: translate(-50%, -50%) scale(0.5); }
-    50% { transform: translate(-50%, -50%) scale(1.2); }
-    100% { transform: translate(-50%, -50%) scale(1.0); }
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1.0);
+  }
 }
 
 /* --- 11. レスポンシブ対応 --- */
@@ -360,82 +734,191 @@ button:disabled { color: #555; border-color: #555; cursor: not-allowed; }
 /* iPhone SE (横画面) 対応 */
 @media (orientation: landscape) and (max-height: 500px) {
   body {
-    padding: 0; align-items: flex-start; overflow: hidden;
+    padding: 0;
+    align-items: flex-start;
+    overflow: hidden;
   }
+
   .game-container {
-    width: 100%; max-width: 100%; height: 100vh; border: none;
-    display: grid; grid-template-columns: 1.2fr 0.8fr;
-    grid-template-rows: auto 1fr; gap: 5px; padding: 5px;
+    width: 100%;
+    max-width: 100%;
+    height: 100vh;
+    border: none;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    grid-template-rows: auto 1fr;
+    gap: 5px;
+    padding: 5px;
   }
-  .game-container h1 { grid-column: 1 / -1; font-size: 16px; margin: 0; }
-  .window { margin-bottom: 5px; padding: 10px; font-size: 0.9em; }
-  .message-box { height: 60px; }
+
+  .game-container h1 {
+    grid-column: 1 / -1;
+    font-size: 16px;
+    margin: 0;
+  }
+
+  .window {
+    margin-bottom: 5px;
+    padding: 10px;
+    font-size: 0.9em;
+  }
+
+  .message-box {
+    height: 60px;
+  }
+
   .controls {
-    grid-column: 2; grid-row: 2 / 4;
-    display: flex; flex-direction: column; gap: 5px; height: 100%; overflow-y: auto;
+    grid-column: 2;
+    grid-row: 2 / 4;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    height: 100%;
+    overflow-y: auto;
   }
-  .controls button { padding: 8px; flex: 1; }
+
+  .controls button {
+    padding: 8px;
+    flex: 1;
+  }
 
   /* 演奏画面 */
   #fretboard-overlay .overlay-content {
-    width: 100%; height: 100%; position: relative;
-    display: flex; align-items: center; justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  .fretboard { width: 95vw; height: 85vh; margin: 0; border-width: 2px; }
+
+  .fretboard {
+    width: 95vw;
+    height: 85vh;
+    margin: 0;
+    border-width: 2px;
+  }
+
   #btn-stop-play {
-    position: absolute; top: 10px; right: 20px;
-    margin: 0; padding: 5px 15px; font-size: 12px; z-index: 200; opacity: 0.8;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    margin: 0;
+    padding: 5px 15px;
+    font-size: 12px;
+    z-index: 200;
+    opacity: 0.8;
   }
+
   #groove-lamp {
-    position: absolute; top: 10px; left: 20px;
-    margin: 0; font-size: 12px; padding: 2px 10px; z-index: 200;
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    margin: 0;
+    font-size: 12px;
+    padding: 2px 10px;
+    z-index: 200;
   }
+
   .backing-info {
-    position: absolute; top: 40px; left: 20px; text-align: left; z-index: 200; pointer-events: none;
+    position: absolute;
+    top: 40px;
+    left: 20px;
+    text-align: left;
+    z-index: 200;
+    pointer-events: none;
   }
-  #current-chord { font-size: 24px; }
-  .overlay-content > div[style*="margin-top"] { display: none; }
-  .bonus-text { top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 60px; }
+
+  #current-chord {
+    font-size: 24px;
+  }
+
+  .overlay-content>div[style*="margin-top"] {
+    display: none;
+  }
+
+  .bonus-text {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 60px;
+  }
 }
 
 /* スマホ縦画面 (ポートレート) スクロール対策 */
 @media (max-width: 600px) and (orientation: portrait) {
   body {
-    align-items: flex-start; padding: 20px 0;
-    height: auto; min-height: 100vh; overflow-y: auto;
+    align-items: flex-start;
+    padding: 20px 0;
+    height: auto;
+    min-height: 100vh;
+    overflow-y: auto;
   }
-  .game-container { margin: 0 auto; height: auto; overflow: visible; }
-  
+
+  .game-container {
+    margin: 0 auto;
+    height: auto;
+    overflow: visible;
+  }
+
   /* リスト画面レイアウト */
-  .list-window { height: 90vh; max-height: none; display: flex; flex-direction: column; }
-  .list-container { flex-direction: column; gap: 10px; flex: 1; overflow: hidden; }
-  
+  .list-window {
+    height: 90vh;
+    max-height: none;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .list-container {
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+    overflow: hidden;
+  }
+
   /* 文字サイズ調整 */
-  .list-header-row h2 { font-size: 16px; }
+  .list-header-row h2 {
+    font-size: 16px;
+  }
 
   /* パネル高さ調整 */
-  .selectable-list { flex: 1; height: auto; min-height: 0; overflow-y: auto; border-bottom: 1px solid #444; }
-  .specs-panel { flex: 0 0 auto; height: 40vh; border: none; border-top: 1px solid #444; }
+  .selectable-list {
+    flex: 1;
+    height: auto;
+    min-height: 0;
+    overflow-y: auto;
+    border-bottom: 1px solid #444;
+  }
+
+  .specs-panel {
+    flex: 0 0 auto;
+    height: 40vh;
+    border: none;
+    border-top: 1px solid #444;
+  }
 }
 
 /* --- イントロ画面のフッター --- */
 .intro-footer {
-    position: absolute;
-    bottom: 20px;
-    width: 100%;
-    text-align: center;
-    z-index: 10000; /* 最前面に */
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+  z-index: 10000;
+  /* 最前面に */
 }
 
 .intro-footer a {
-    color: #666;
-    text-decoration: none;
-    font-size: 14px;
-    font-family: sans-serif; /* 読みやすいフォントで */
-    transition: color 0.3s;
+  color: #666;
+  text-decoration: none;
+  font-size: 14px;
+  font-family: sans-serif;
+  /* 読みやすいフォントで */
+  transition: color 0.3s;
 }
 
 .intro-footer a:hover {
-    color: #00ffff; /* ホバー時にネオンカラーに */
-    text-decoration: underline;
+  color: #00ffff;
+  /* ホバー時にネオンカラーに */
+  text-decoration: underline;
 }

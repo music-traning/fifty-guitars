@@ -73,7 +73,17 @@ const ui = {
     // ヘルプ画面
     helpOverlay: document.getElementById('help-overlay'),
     btnCloseHelp: document.getElementById('btn-close-help'),
-    btnDeleteData: document.getElementById('btn-delete-data')
+    btnDeleteData: document.getElementById('btn-delete-data'),
+
+    // ★エンディング画面
+    endingOverlay: document.getElementById('ending-overlay'),
+    endingRouteTitle: document.getElementById('ending-route-title'),
+    endingOyajiMsg: document.getElementById('ending-oyaji-msg'),
+    statRespect: document.getElementById('stat-respect'),
+    statPassion: document.getElementById('stat-passion'),
+    statPrecision: document.getElementById('stat-precision'),
+    statMoney: document.getElementById('stat-money'),
+    btnRestartGame: document.getElementById('btn-restart-game')
 };
 
 // 起動時の処理
@@ -175,6 +185,44 @@ function showTimingJudgment(judgment) {
     }, 800);
 }
 
+// ★エンディング表示
+function showEnding() {
+    if (!ui.endingOverlay) return;
+
+    const route = state.oyajiRelationship.getEndingRoute();
+    const guitar = DB.guitars.find(g => g.id === state.currentGuitarId);
+
+    let routeTitle = "";
+    let oyajiMessage = "";
+
+    // ルート別のメッセージ
+    if (route === 'precision') {
+        routeTitle = "〜 完璧さを求めた者へ 〜";
+        oyajiMessage = `……きたか。\n\nおまえは　ひたすら　せいかくさ　を　おいもとめた。\nまちがい　を　おそれ、　いつも　かんぺき　を　めざした。\n\nそれは　けっして　まちがい　じゃない。\nだが　おぼえておけ。\n\n「かんぺき　な　えんそう」　なんて　ものは　ない。\nたいせつ　なのは　きもち　だ。\n\n……もう　おしえる　ことは　ない。\nあとは　じぶん　で　みちを　ひらけ。`;
+    } else if (route === 'passion') {
+        routeTitle = "〜 個性を貫いた者へ 〜";
+        oyajiMessage = `……やるじゃねえか。\n\nおまえは　じぶん　の　スタイル　を　つらぬいた。\nリスク　を　おそれず、　ぼうけん　を　えらんだ。\n\nその　いきおい、　きらい　じゃねえ。\nだが　わすれるな。\n\n「じゆう」　と　「ほうし」　は　かみひとえ　だ。\nときには　たちどまって　かんがえろ。\n\n……おまえなら　だいじょうぶ　だ。\nじぶん　を　しんじて　すすめ。`;
+    } else {
+        routeTitle = "〜 バランスを見出した者へ 〜";
+        oyajiMessage = `……なかなか　やるな。\n\nおまえは　せいかくさ　と　じゆう　の　あいだ　で\nバランス　を　とった。\n\nそれが　いちばん　むずかしい。\nだが　おまえは　それを　やりとげた。\n\n「おんがく　に　せいかい　は　ない」\nだが　「まちがい　も　ない」。\n\nたいせつ　なのは　じぶん　らしさ　だ。\n\n……もう　いく　ときが　きた　ようだな。\nげんき　で　な。`;
+    }
+
+    // 特別なギターを使っている場合の追加メッセージ
+    if (guitar && guitar.hidden_message) {
+        oyajiMessage += `\n\n\n……それと、　その　${guitar.model}。\nよく　にあってる　ぜ。`;
+    }
+
+    // UI更新
+    ui.endingRouteTitle.innerText = routeTitle;
+    ui.endingOyajiMsg.innerText = oyajiMessage;
+    ui.statRespect.innerText = state.oyajiRelationship.respect;
+    ui.statPassion.innerText = state.oyajiRelationship.passion;
+    ui.statPrecision.innerText = state.oyajiRelationship.precision;
+    ui.statMoney.innerText = state.money.toLocaleString();
+
+    ui.endingOverlay.classList.remove('hidden');
+}
+
 
 function setupButtons() {
     // 各ボタンが存在するかチェックしてからイベントを設定（エラー防止）
@@ -242,6 +290,9 @@ function setupButtons() {
             // ★オヤジのコメントを表示（関係値に応じて変化）
             const oyajiComment = state.oyajiRelationship.getOyajiComment();
             showMsg("おやじ", oyajiComment);
+
+            // ★フレットボードの色分け表示を更新
+            updateFretboardColors();
 
             setTimeout(() => {
                 showMsg("システム", `${style.desc}\nスネア(2拍4拍)に　あわせて　ひけ！`);
@@ -376,6 +427,15 @@ function setupButtons() {
             const result = state.tryClearStage();
             if (result.success) {
                 updateStatusUI();
+
+                // ★Lv50クリア時にエンディング表示
+                if (state.currentStageId > 50) {
+                    setTimeout(() => {
+                        showEnding();
+                    }, 2000);
+                    return;
+                }
+
                 const style = getStageStyle(state.currentStageId);
                 if (backing) backing.setStyle(style);
                 if (ui.styleTitle) ui.styleTitle.innerText = `${style.title} (BPM:${style.bpm})`;
@@ -403,6 +463,16 @@ function setupButtons() {
             showMsg("システム", "新しいギターを　手に入れた！");
         };
     }
+
+    // ★エンディング後のリスタート
+    if (ui.btnRestartGame) {
+        ui.btnRestartGame.onclick = () => {
+            if (confirm("最初からやり直しますか？\n（現在のデータは削除されます）")) {
+                localStorage.removeItem('50go_save_data');
+                location.reload();
+            }
+        };
+    }
 }
 
 function renderGuitarList() {
@@ -410,14 +480,27 @@ function renderGuitarList() {
     state.ownedGuitars.forEach(id => {
         const g = DB.guitars.find(item => item.id === id);
         const li = document.createElement('li');
-        li.innerText = g.model;
-        li.className = (id === state.currentGuitarId) ? 'current-equip' : '';
+
+        // ★推奨ギター表示
+        const isRecommended = g.stage_affinity && g.stage_affinity.includes(state.currentStageId);
+        li.innerText = isRecommended ? `★ ${g.model}` : g.model;
+
+        let className = (id === state.currentGuitarId) ? 'current-equip' : '';
+        if (isRecommended) className += ' recommended-guitar';
+        li.className = className;
+
         li.onclick = () => {
             ui.specName.innerText = g.model;
             ui.specAppeal.innerText = g.specs.appeal;
             ui.specWeight.innerText = g.specs.weight;
 
-            const priceText = `参考価格: ${g.price.toLocaleString()} G\n\n`;
+            let priceText = `参考価格: ${g.price.toLocaleString()} G\n\n`;
+
+            // ★推奨ギター情報を追加
+            if (isRecommended) {
+                priceText += `【推奨ギター】このステージで+30%ボーナス！\n\n`;
+            }
+
             ui.specDesc.innerText = priceText + g.durability.desc;
 
             ui.specLife.innerText = g.durability.max_life;
@@ -437,11 +520,59 @@ function drawFretboard() {
     for (let i = 1; i <= 12; i++) {
         const div = document.createElement('div');
         div.className = 'fret-cell';
+        div.dataset.fret = i; // ★フレット番号を記録
         if (dots.includes(i)) {
             div.innerHTML = i === 12 ? '<div class="double-dot"><div class="dot"></div><div class="dot"></div></div>' : '<div class="dot"></div>';
         }
         ui.fretsArea.appendChild(div);
     }
+}
+
+// ★フレットボードの色分け表示を更新
+function updateFretboardColors() {
+    if (!backing || !backing.isPlaying) return;
+
+    const currentChord = backing.currentChord;
+    if (!currentChord) return;
+
+    const validFrets = getPentatonicGuide(currentChord);
+    const fretCells = document.querySelectorAll('.fret-cell');
+
+    fretCells.forEach(cell => {
+        const fret = parseInt(cell.dataset.fret);
+
+        // 色をリセット
+        cell.style.backgroundColor = '';
+        cell.style.boxShadow = '';
+
+        if (validFrets.includes(fret)) {
+            // 緑：ペンタトニック内
+            cell.style.backgroundColor = 'rgba(0, 255, 0, 0.2)';
+            cell.style.boxShadow = '0 0 10px rgba(0, 255, 0, 0.4)';
+        } else {
+            // アウトサイド判定：有効フレットから±2以内
+            const isNear = validFrets.some(vf => Math.abs(fret - vf) <= 2);
+
+            if (isNear) {
+                // オレンジ：アウトサイド（危険だが高リスク高リターン）
+                cell.style.backgroundColor = 'rgba(255, 165, 0, 0.15)';
+                cell.style.boxShadow = '0 0 8px rgba(255, 165, 0, 0.3)';
+            } else {
+                // 赤：完全に外れている
+                cell.style.backgroundColor = 'rgba(255, 0, 0, 0.1)';
+                cell.style.boxShadow = '0 0 5px rgba(255, 0, 0, 0.2)';
+            }
+        }
+    });
+}
+
+// ★コード変更時にフレットボードの色を更新
+if (backing) {
+    backing.subscribe((type, val) => {
+        if (type === 'chord' && val !== '-') {
+            updateFretboardColors();
+        }
+    });
 }
 
 state.subscribe((type, payload) => {
