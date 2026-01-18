@@ -5,13 +5,13 @@ import { DB } from './data';
 import { GameState } from './engine/GameState';
 import { GuitarSynth } from './engine/AudioSynth';
 import { BackingTrack } from './engine/BackingTrack';
-import { getStageStyle } from './engine/StageConfig';
+import { getStageStyle, getPentatonicGuide } from './engine/StageConfig';
 import oyajiTalkData from './data/oyaji_talk.json';
 import './style.css';
 
 const state = new GameState();
 const synth = new GuitarSynth();
-let backing = null; 
+let backing = null;
 
 const ui = {
     // イントロ
@@ -42,7 +42,11 @@ const ui = {
     fretsArea: document.getElementById('frets-area'),
     grooveLamp: document.getElementById('groove-lamp'),
     bonusText: document.getElementById('bonus-display'),
-    
+
+    // ★タイミング判定表示
+    timingJudgment: document.getElementById('timing-judgment'),
+    multiplierDisplay: document.getElementById('multiplier-display'),
+
     styleTitle: document.getElementById('style-title'),
     currentChord: document.getElementById('current-chord'),
 
@@ -117,10 +121,10 @@ function updateStatusUI() {
 
     ui.money.innerText = state.money;
     ui.guitarName.innerText = g ? g.model : '-';
-    
+
     ui.lifeVal.innerText = Math.floor(state.durability);
     ui.maxLife.innerText = state.maxDurability;
-    
+
     const pct = (state.durability / state.maxDurability) * 100;
     ui.lifeBar.style.width = pct + "%";
     ui.lifeBar.style.backgroundColor = pct < 20 ? "#ff4444" : "#00ff00";
@@ -140,16 +144,37 @@ function showRewardModal(guitarName, oyajiText) {
 function showBonusEffect(type) {
     ui.bonusText.innerText = type + "!!";
     ui.bonusText.className = "bonus-text show " + type.toLowerCase();
-    
+
     setTimeout(() => {
         ui.bonusText.className = "bonus-text";
     }, 500);
 
     if (type === "TASTY") {
-        ui.fretboard.style.backgroundColor = "#554433"; 
+        ui.fretboard.style.backgroundColor = "#554433";
         setTimeout(() => ui.fretboard.style.backgroundColor = "#3e2723", 100);
     }
 }
+
+// ★タイミング判定表示
+function showTimingJudgment(judgment) {
+    if (!ui.timingJudgment || !ui.multiplierDisplay) return;
+
+    const { rating, mult } = judgment;
+
+    // 判定表示
+    ui.timingJudgment.innerText = rating;
+    ui.timingJudgment.className = `timing-judgment show ${rating.toLowerCase()}`;
+
+    // 倍率表示
+    ui.multiplierDisplay.innerText = `×${mult.toFixed(1)}`;
+    ui.multiplierDisplay.className = "multiplier-display show";
+
+    setTimeout(() => {
+        ui.timingJudgment.className = "timing-judgment";
+        ui.multiplierDisplay.className = "multiplier-display";
+    }, 800);
+}
+
 
 function setupButtons() {
     // 各ボタンが存在するかチェックしてからイベントを設定（エラー防止）
@@ -177,9 +202,9 @@ function setupButtons() {
 
     if (ui.btnDeleteData) {
         ui.btnDeleteData.onclick = () => {
-            if(confirm("本当にデータを消去して、最初からやり直しますか？\n（この操作は取り消せません）")) {
+            if (confirm("本当にデータを消去して、最初からやり直しますか？\n（この操作は取り消せません）")) {
                 localStorage.removeItem('50go_save_data');
-                location.reload(); 
+                location.reload();
             }
         };
     }
@@ -191,9 +216,9 @@ function setupButtons() {
                 return;
             }
             ui.fretboard.classList.remove('hidden');
-            
+
             synth.init();
-            
+
             if (!backing) {
                 backing = new BackingTrack(synth.audioCtx, synth);
                 backing.subscribe((type, val) => {
@@ -203,17 +228,24 @@ function setupButtons() {
                             setTimeout(() => ui.grooveLamp.classList.remove('active'), 100);
                         }
                     } else if (type === 'chord') {
-                        if(ui.currentChord) ui.currentChord.innerText = val;
+                        if (ui.currentChord) ui.currentChord.innerText = val;
                     }
                 });
             }
 
             const style = getStageStyle(state.currentStageId);
             backing.setStyle(style);
-            if(ui.styleTitle) ui.styleTitle.innerText = `${style.title} (BPM:${style.bpm})`;
-            
+            if (ui.styleTitle) ui.styleTitle.innerText = `${style.title} (BPM:${style.bpm})`;
+
             backing.start();
-            showMsg("システム", `${style.desc}\nスネア(2拍4拍)に　あわせて　ひけ！`);
+
+            // ★オヤジのコメントを表示（関係値に応じて変化）
+            const oyajiComment = state.oyajiRelationship.getOyajiComment();
+            showMsg("おやじ", oyajiComment);
+
+            setTimeout(() => {
+                showMsg("システム", `${style.desc}\nスネア(2拍4拍)に　あわせて　ひけ！`);
+            }, 2000);
         };
     }
 
@@ -221,38 +253,52 @@ function setupButtons() {
         ui.btnStopPlay.onclick = () => {
             ui.fretboard.classList.add('hidden');
             if (backing) backing.stop();
-            state.playAction(0.5); 
+            state.playAction(0.5);
             updateStatusUI();
         };
     }
 
     ui.fretboard.addEventListener('mousedown', () => checkHit(false));
     ui.fretboard.addEventListener('touchstart', () => checkHit(false));
-    
+
     let isDragging = false;
     ui.fretboard.addEventListener('mousemove', () => { isDragging = true; });
     ui.fretboard.addEventListener('mouseup', () => {
-        if (isDragging) checkHit(true); 
+        if (isDragging) checkHit(true);
         isDragging = false;
     });
 
     function checkHit(isBend) {
         if (!backing || !backing.isPlaying) return;
-        
+
+        // ★タイミング判定を取得
+        const judgment = backing.judge(synth.audioCtx.currentTime);
+
         const result = backing.checkTiming(isBend);
         if (result) {
             let bonusMoney = 0;
             if (result === "TASTY") {
-                bonusMoney = 100; 
-                state.money += bonusMoney;
+                bonusMoney = 100;
             } else {
-                bonusMoney = 20; 
-                state.money += bonusMoney;
+                bonusMoney = 20;
             }
+
+            // ★タイミング判定の倍率を適用
+            bonusMoney = Math.floor(bonusMoney * judgment.mult);
+            state.money += bonusMoney;
+
+            // ★オヤジ関係値を更新
+            state.oyajiRelationship.update(judgment.rating, isBend ? 1 : 0, 0);
+
             showBonusEffect(result);
+            showTimingJudgment(judgment);
             updateStatusUI();
+        } else {
+            // タイミング外でもジャッジメントは表示
+            showTimingJudgment(judgment);
         }
     }
+
 
     if (ui.btnShop) {
         ui.btnShop.onclick = () => {
@@ -314,7 +360,7 @@ function setupButtons() {
     if (ui.btnPrev) {
         ui.btnPrev.onclick = () => {
             if (state.goPrevStage()) {
-                updateStatusUI(); 
+                updateStatusUI();
                 const style = getStageStyle(state.currentStageId);
                 if (backing) backing.setStyle(style);
                 if (ui.styleTitle) ui.styleTitle.innerText = `${style.title} (BPM:${style.bpm})`;
@@ -329,19 +375,19 @@ function setupButtons() {
         ui.btnNext.onclick = () => {
             const result = state.tryClearStage();
             if (result.success) {
-                updateStatusUI(); 
+                updateStatusUI();
                 const style = getStageStyle(state.currentStageId);
                 if (backing) backing.setStyle(style);
                 if (ui.styleTitle) ui.styleTitle.innerText = `${style.title} (BPM:${style.bpm})`;
 
                 showMsg("システム", result.msg);
-                
+
                 if (result.oyajiWords) {
                     const lastUnlockedId = state.ownedGuitars[state.ownedGuitars.length - 1];
                     const g = DB.guitars.find(item => item.id === lastUnlockedId);
                     setTimeout(() => showRewardModal(g.model, result.oyajiWords), 1000);
                 }
-                
+
                 if (result.nextStage) {
                     setTimeout(() => showMsg("システム", `【STAGE ${result.nextStage.stage}】へ移動した。\n目標: ${result.nextStage.quota} G`), result.oyajiWords ? 1500 : 2500);
                 }
@@ -370,12 +416,12 @@ function renderGuitarList() {
             ui.specName.innerText = g.model;
             ui.specAppeal.innerText = g.specs.appeal;
             ui.specWeight.innerText = g.specs.weight;
-            
+
             const priceText = `参考価格: ${g.price.toLocaleString()} G\n\n`;
             ui.specDesc.innerText = priceText + g.durability.desc;
 
             ui.specLife.innerText = g.durability.max_life;
-            
+
             ui.btnEquip.disabled = false;
             ui.btnEquip.dataset.id = id;
             document.querySelectorAll('.selectable-list li').forEach(el => el.classList.remove('selected'));
@@ -404,7 +450,7 @@ state.subscribe((type, payload) => {
         if (backing) backing.stop();
         const lostMsg = DB.scenario.dialogue_data.conversations[0].text;
         showMsg("おやじ", lostMsg + "\n(GAME OVER - 修理して出直せ)");
-    } 
+    }
     updateStatusUI();
 });
 

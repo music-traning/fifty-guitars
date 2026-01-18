@@ -1,59 +1,71 @@
 // 簡単なコード周波数マップ (第4オクターブ付近)
 const CHORD_MAP = {
-    // Basic Major
-    "C": [261.63, 329.63, 392.00],
-    "D": [293.66, 369.99, 440.00],
-    "E": [329.63, 415.30, 493.88],
-    "F": [349.23, 440.00, 523.25],
-    "G": [392.00, 493.88, 587.33],
-    "A": [440.00, 554.37, 659.25],
-    "B": [493.88, 622.25, 739.99],
-    "Bb": [466.16, 587.33, 698.46],
-    "Eb": [311.13, 392.00, 466.16],
+  // Basic Major
+  "C": [261.63, 329.63, 392.00],
+  "D": [293.66, 369.99, 440.00],
+  "E": [329.63, 415.30, 493.88],
+  "F": [349.23, 440.00, 523.25],
+  "G": [392.00, 493.88, 587.33],
+  "A": [440.00, 554.37, 659.25],
+  "B": [493.88, 622.25, 739.99],
+  "Bb": [466.16, 587.33, 698.46],
+  "Eb": [311.13, 392.00, 466.16],
 
-    // Basic Minor
-    "Am": [220.00, 261.63, 329.63],
-    "Dm": [293.66, 349.23, 440.00],
-    "Em": [329.63, 392.00, 493.88],
-    "Gm": [392.00, 466.16, 587.33],
-    "Cm": [261.63, 311.13, 392.00],
-    "Bm": [493.88, 587.33, 739.99],
+  // Basic Minor
+  "Am": [220.00, 261.63, 329.63],
+  "Dm": [293.66, 349.23, 440.00],
+  "Em": [329.63, 392.00, 493.88],
+  "Gm": [392.00, 466.16, 587.33],
+  "Cm": [261.63, 311.13, 392.00],
+  "Bm": [493.88, 587.33, 739.99],
 
-    // 7th
-    "C7": [261.63, 329.63, 392.00, 466.16],
-    "G7": [392.00, 493.88, 587.33, 698.46],
-    "D7": [293.66, 369.99, 440.00, 523.25],
-    "A7": [440.00, 554.37, 659.25, 783.99],
-    "E7": [329.63, 415.30, 493.88, 587.33],
-    "F7": [349.23, 440.00, 523.25, 622.25],
-    "Bb7": [233.08, 293.66, 349.23, 415.30], // 低め
+  // 7th
+  "C7": [261.63, 329.63, 392.00, 466.16],
+  "G7": [392.00, 493.88, 587.33, 698.46],
+  "D7": [293.66, 369.99, 440.00, 523.25],
+  "A7": [440.00, 554.37, 659.25, 783.99],
+  "E7": [329.63, 415.30, 493.88, 587.33],
+  "F7": [349.23, 440.00, 523.25, 622.25],
+  "Bb7": [233.08, 293.66, 349.23, 415.30], // 低め
 
-    // Major 7
-    "Cmaj7": [261.63, 329.63, 392.00, 493.88],
-    "Fmaj7": [349.23, 440.00, 523.25, 659.25],
-    "Gmaj7": [392.00, 493.88, 587.33, 739.99],
-    "Ebmaj7": [311.13, 392.00, 466.16, 587.33],
-    "Bmaj7": [493.88, 622.25, 739.99, 932.33],
+  // Major 7
+  "Cmaj7": [261.63, 329.63, 392.00, 493.88],
+  "Fmaj7": [349.23, 440.00, 523.25, 659.25],
+  "Gmaj7": [392.00, 493.88, 587.33, 739.99],
+  "Ebmaj7": [311.13, 392.00, 466.16, 587.33],
+  "Bmaj7": [493.88, 622.25, 739.99, 932.33],
 
-    // Minor 7
-    "Dm7": [293.66, 349.23, 440.00, 523.25],
-    "Gm7": [392.00, 466.16, 587.33, 698.46],
-    "Am7": [220.00, 261.63, 329.63, 392.00],
-    "Cm7": [261.63, 311.13, 392.00, 466.16],
-    "Em7": [329.63, 392.00, 493.88, 587.33],
-    "Ebm7": [311.13, 369.99, 466.16, 554.37]
+  // Minor 7
+  "Dm7": [293.66, 349.23, 440.00, 523.25],
+  "Gm7": [392.00, 466.16, 587.33, 698.46],
+  "Am7": [220.00, 261.63, 329.63, 392.00],
+  "Cm7": [261.63, 311.13, 392.00, 466.16],
+  "Em7": [329.63, 392.00, 493.88, 587.33],
+  "Ebm7": [311.13, 369.99, 466.16, 554.37]
 };
+
+// ★タイミング判定クラス
+class TimingJudge {
+  judge(playerActionTime, scheduledBeatTime) {
+    const delta = Math.abs(playerActionTime - scheduledBeatTime) * 1000; // ミリ秒に変換
+
+    if (delta <= 50) return { rating: 'PERFECT', mult: 1.5 };
+    if (delta <= 100) return { rating: 'GREAT', mult: 1.2 };
+    if (delta <= 150) return { rating: 'GOOD', mult: 1.0 };
+    return { rating: 'MISS', mult: 0.7 };
+  }
+}
 
 export class BackingTrack {
   constructor(audioCtx, synth) {
     this.ctx = audioCtx;
     this.synth = synth; // GuitarSynthのインスタンスを受け取る
     this.isPlaying = false;
-    
+
     this.currentStyle = {
-        bpm: 100,
-        progression: ["C7"],
-        title: "Blues"
+      bpm: 100,
+      progression: ["C7"],
+      title: "Blues"
     };
 
     this.nextNoteTime = 0.0;
@@ -63,10 +75,14 @@ export class BackingTrack {
     this.currentChord = "";
     this.isTastyWindow = false;
     this.listeners = [];
+
+    // ★タイミング判定用
+    this.timingJudge = new TimingJudge();
+    this.lastBeatTime = 0;
   }
 
   setStyle(styleObj) {
-      this.currentStyle = styleObj;
+    this.currentStyle = styleObj;
   }
 
   start() {
@@ -101,7 +117,7 @@ export class BackingTrack {
     this.nextNoteTime += secondsPerBeat;
     this.beatCount++;
     if (this.beatCount % 4 === 0) {
-        this.measureCount++;
+      this.measureCount++;
     }
   }
 
@@ -110,22 +126,22 @@ export class BackingTrack {
 
     // --- 1拍目: コード再生 & 表示 ---
     if (beatInBar === 0) {
-        const prog = this.currentStyle.progression;
-        const chordName = prog[this.measureCount % prog.length];
-        this.currentChord = chordName;
-        
-        // コード名を分解して検索 (例: "Dm7 (Dorian)" -> "Dm7")
-        const key = chordName.split(' ')[0];
-        const freqs = CHORD_MAP[key] || [261.63, 329.63, 392.00]; // なければC
+      const prog = this.currentStyle.progression;
+      const chordName = prog[this.measureCount % prog.length];
+      this.currentChord = chordName;
 
-        // ★和音を鳴らす！
-        this.synth.playChord(freqs, 2.0); // 2秒くらい伸ばす
+      // コード名を分解して検索 (例: "Dm7 (Dorian)" -> "Dm7")
+      const key = chordName.split(' ')[0];
+      const freqs = CHORD_MAP[key] || [261.63, 329.63, 392.00]; // なければC
 
-        // UI通知
-        const delay = (time - this.ctx.currentTime) * 1000;
-        setTimeout(() => {
-            this.notify('chord', this.currentChord);
-        }, delay);
+      // ★和音を鳴らす！
+      this.synth.playChord(freqs, 2.0); // 2秒くらい伸ばす
+
+      // UI通知
+      const delay = (time - this.ctx.currentTime) * 1000;
+      setTimeout(() => {
+        this.notify('chord', this.currentChord);
+      }, delay);
     }
 
     // --- ドラム ---
@@ -146,6 +162,8 @@ export class BackingTrack {
       gain.gain.setValueAtTime(0.6, time);
       gain.gain.exponentialRampToValueAtTime(0.01, time + 0.2);
       this.triggerBonusWindow(time);
+      // ★タイミング判定用に記録
+      this.lastBeatTime = time;
     }
 
     osc.start(time);
@@ -159,7 +177,7 @@ export class BackingTrack {
   }
 
   triggerBonusWindow(time) {
-    const windowSize = Math.max(50, 150 - (this.currentStyle.bpm / 2)); 
+    const windowSize = Math.max(50, 150 - (this.currentStyle.bpm / 2));
     const delay = (time - this.ctx.currentTime) * 1000;
     setTimeout(() => { this.isTastyWindow = true; }, delay - windowSize);
     setTimeout(() => { this.isTastyWindow = false; }, delay + windowSize);
@@ -171,6 +189,20 @@ export class BackingTrack {
       return isBending ? "TASTY" : "GROOVE";
     }
     return null;
+  }
+
+  // ★新規: タイミング判定（PERFECT/GREAT/GOOD/MISS）
+  judge(playerActionTime) {
+    if (!this.isPlaying) return { rating: 'MISS', mult: 0.7 };
+    return this.timingJudge.judge(playerActionTime, this.lastBeatTime);
+  }
+
+  // ★新規: 次のコードを予測（ベンド判定用）
+  getNextChord() {
+    if (!this.isPlaying) return null;
+    const prog = this.currentStyle.progression;
+    const nextMeasure = (this.measureCount + 1) % prog.length;
+    return prog[nextMeasure].split(' ')[0]; // "Dm7 (Dorian)" → "Dm7"
   }
 
   subscribe(cb) { this.listeners.push(cb); }

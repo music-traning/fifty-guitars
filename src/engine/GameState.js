@@ -1,18 +1,84 @@
 import { DB } from '../data';
-import { getStageStyle } from './StageConfig'; 
+import { getStageStyle } from './StageConfig';
+
+// ★オヤジ関係値システム
+class OyajiRelationship {
+  constructor() {
+    this.respect = 0;      // 技術力
+    this.passion = 0;      // リスク志向・個性
+    this.precision = 0;    // 正確性
+  }
+
+  update(judgment, bends, scaleMisses) {
+    if (judgment === 'PERFECT') this.precision += 5;
+    if (judgment === 'GREAT') this.precision += 2;
+    if (judgment === 'GOOD') this.precision += 1;
+
+    if (bends > 0) this.passion += 3;
+    if (scaleMisses > 2) this.passion += 5;  // 冒険的
+
+    // 総合的な技術力
+    if (judgment === 'PERFECT' || judgment === 'GREAT') {
+      this.respect += 2;
+    }
+  }
+
+  // ステージ開始時に呼び出す
+  getOyajiComment() {
+    if (this.precision > 500 && this.respect > 300) {
+      return "……きてたのか。もう教える事はねえ。";
+    }
+    if (this.passion > this.precision) {
+      return "チカラマカセだな。その勢い、嫌いじゃねえ。";
+    }
+    if (this.respect > 400) {
+      return "そこまで来たか。……かくご　は　できてるか？";
+    }
+    return "……ふん。やってみろ。";
+  }
+
+  // エンディング分岐判定
+  getEndingRoute() {
+    if (this.precision > this.passion * 1.5) {
+      return 'precision'; // 完璧さを求めるルート
+    }
+    if (this.passion > this.precision * 1.5) {
+      return 'passion'; // 個性を貫くルート
+    }
+    return 'balanced'; // バランス型
+  }
+
+  toJSON() {
+    return {
+      respect: this.respect,
+      passion: this.passion,
+      precision: this.precision
+    };
+  }
+
+  fromJSON(data) {
+    this.respect = data.respect || 0;
+    this.passion = data.passion || 0;
+    this.precision = data.precision || 0;
+  }
+}
+
 
 export class GameState {
   constructor() {
     this.money = 0;
-    this.ownedGuitars = [1]; 
+    this.ownedGuitars = [1];
     this.currentGuitarId = 1;
     this.currentStageId = 1;
     this.durability = 50;
     this.maxDurability = 50;
-    
-    this.guitarDurabilities = {}; 
+
+    this.guitarDurabilities = {};
 
     this.listeners = [];
+
+    // ★オヤジ関係値
+    this.oyajiRelationship = new OyajiRelationship();
   }
 
   save() {
@@ -23,7 +89,8 @@ export class GameState {
       currentGuitarId: this.currentGuitarId,
       currentStageId: this.currentStageId,
       durability: this.durability,
-      guitarDurabilities: this.guitarDurabilities
+      guitarDurabilities: this.guitarDurabilities,
+      oyajiRelationship: this.oyajiRelationship.toJSON()
     };
     localStorage.setItem('50go_save_data', JSON.stringify(data));
   }
@@ -32,10 +99,10 @@ export class GameState {
     const json = localStorage.getItem('50go_save_data');
     if (json) {
       const data = JSON.parse(json);
-      
+
       // ★修正: NaN（数値エラー）になっていたら 0 にリセットして復旧する
       this.money = Number.isNaN(Number(data.money)) ? 0 : (data.money || 0);
-      
+
       this.ownedGuitars = data.ownedGuitars || [1];
       this.currentGuitarId = data.currentGuitarId || 1;
       this.currentStageId = data.currentStageId || 1;
@@ -49,7 +116,12 @@ export class GameState {
       } else {
         this.durability = this.maxDurability;
       }
-      
+
+      // ★オヤジ関係値のロード
+      if (data.oyajiRelationship) {
+        this.oyajiRelationship.fromJSON(data.oyajiRelationship);
+      }
+
       this.notifyChange('update', null);
       return true;
     }
@@ -58,7 +130,7 @@ export class GameState {
 
   equipGuitar(id) {
     if (!this.ownedGuitars.includes(id)) return;
-    
+
     this.guitarDurabilities[this.currentGuitarId] = this.durability;
 
     const guitar = DB.guitars.find(g => g.id === id);
@@ -107,54 +179,54 @@ export class GameState {
 
     // --- スキル分岐 ---
     if (skill.type === 'poverty') {
-        moneyMult = skill.val1; 
-        decayMult = skill.val2;
+      moneyMult = skill.val1;
+      decayMult = skill.val2;
     }
     else if (skill.type === 'gamble') {
-        if (Math.random() < skill.prob) {
-            moneyMult = skill.mult;
-        }
+      if (Math.random() < skill.prob) {
+        moneyMult = skill.mult;
+      }
     }
     else if (skill.type === 'appeal_up') {
-        extraAppeal = skill.val;
+      extraAppeal = skill.val;
     }
     else if (skill.type === 'durability_save') {
-        decayMult = skill.val;
+      decayMult = skill.val;
     }
     // ★修正: brand_name は val だったり mult だったりするので両方チェック
     else if (skill.type === 'brand_name') {
-        moneyMult = skill.val || skill.mult || 1.0;
+      moneyMult = skill.val || skill.mult || 1.0;
     }
     // ★追加: 漏れていた vintage_rot を追加
     else if (skill.type === 'vintage_rot') {
-        moneyMult = skill.mult || 1.2;
-        decayMult = skill.decay || 1.5;
+      moneyMult = skill.mult || 1.2;
+      decayMult = skill.decay || 1.5;
     }
     else if (skill.type === 'tech_bonus' || skill.type === 'vintage_bonus' || skill.type === 'legend_bonus') {
-        moneyMult = skill.mult || 1.0;
+      moneyMult = skill.mult || 1.0;
     }
     else if (skill.type === 'stage_bonus') {
-        if (this.currentStageId >= skill.min && this.currentStageId <= skill.max) {
-            moneyMult = skill.mult;
-        }
+      if (this.currentStageId >= skill.min && this.currentStageId <= skill.max) {
+        moneyMult = skill.mult;
+      }
     }
     else if (skill.type === 'speed_bonus') {
-        if (style.bpm >= skill.min_bpm) {
-            moneyMult = skill.mult;
-        }
+      if (style.bpm >= skill.min_bpm) {
+        moneyMult = skill.mult;
+      }
     }
     else if (skill.type === 'heavy_weight') {
-        moneyMult = skill.mult;
-        decayMult = skill.decay;
+      moneyMult = skill.mult;
+      decayMult = skill.decay;
     }
     // ----------------
 
     const decay = guitar.durability.decay_rate * intensity * decayMult * (1 + Math.random() * 0.5);
     this.durability -= decay;
-    
+
     const baseAppeal = guitar.specs.appeal + extraAppeal;
     // ★安全策: 万が一計算結果が NaN になっても 0 にする
-    let reward = Math.floor(baseAppeal * intensity * 500 * moneyMult); 
+    let reward = Math.floor(baseAppeal * intensity * 500 * moneyMult);
     if (Number.isNaN(reward)) reward = 0;
 
     this.money += reward;
@@ -193,12 +265,12 @@ export class GameState {
 
       this.currentStageId++;
       const nextStage = DB.stages.find(s => s.stage === this.currentStageId);
-      
-      return { 
-        success: true, 
+
+      return {
+        success: true,
         msg: `ステージ ${stage.stage} クリア！${rewardMsg}`,
-        oyajiWords: oyajiMsg, 
-        nextStage: nextStage 
+        oyajiWords: oyajiMsg,
+        nextStage: nextStage
       };
     } else {
       const diff = stage.quota - this.money;

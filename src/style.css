@@ -229,6 +229,28 @@ button:disabled { color: #555; border-color: #555; cursor: not-allowed; }
 .bonus-text.groove { color: #00ffff; }
 .bonus-text.tasty { color: #ffff00; font-size: 60px; text-shadow: 0 0 20px orange; }
 
+/* ★タイミング判定表示 */
+.timing-judgment {
+    position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%);
+    font-size: 50px; font-weight: bold; opacity: 0; pointer-events: none;
+    transition: opacity 0.3s; z-index: 201; text-shadow: 2px 2px 4px #000;
+}
+.timing-judgment.show { opacity: 1; animation: bounce 0.3s; }
+.timing-judgment.perfect { color: #ff00ff; text-shadow: 0 0 20px #ff00ff; }
+.timing-judgment.great { color: #00ff00; text-shadow: 0 0 15px #00ff00; }
+.timing-judgment.good { color: #ffff00; text-shadow: 0 0 10px #ffff00; }
+.timing-judgment.miss { color: #888; text-shadow: none; }
+
+/* ★倍率表示 */
+.multiplier-display {
+    position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%);
+    font-size: 30px; font-weight: bold; opacity: 0; pointer-events: none;
+    transition: opacity 0.3s; z-index: 201; color: #ffaa00;
+    text-shadow: 1px 1px 2px #000;
+}
+.multiplier-display.show { opacity: 1; animation: fadeIn 0.3s; }
+
+
 /* --- 8. ギターリスト画面 --- */
 .list-window {
   width: 95%; max-width: 700px; height: 80vh;
