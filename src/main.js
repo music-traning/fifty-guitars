@@ -1,3 +1,6 @@
+import { inject } from '@vercel/analytics';
+inject();
+
 import { DB } from './data';
 import { GameState } from './engine/GameState';
 import { GuitarSynth } from './engine/AudioSynth';
